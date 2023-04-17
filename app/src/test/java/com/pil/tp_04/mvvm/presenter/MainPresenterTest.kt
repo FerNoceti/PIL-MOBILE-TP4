@@ -1,7 +1,7 @@
-package com.pil.tp_04.mvp.presenter
+package com.pil.tp_04.mvvm.presenter
 
-import com.pil.tp_04.mvp.contract.MainContract
-import com.pil.tp_04.mvp.model.MainModel
+import com.pil.tp_04.mvvm.contract.CountContract
+import com.pil.tp_04.mvvm.model.CountModel
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -10,13 +10,13 @@ import org.junit.Test
 
 class MainPresenterTest {
 
-    private var view: MainContract.View = mockk(relaxed = true)
+    private var view: CountContract.View = mockk(relaxed = true)
 
-    private lateinit var presenter: MainContract.Presenter
+    private lateinit var presenter: CountContract.Presenter
 
     @Before
     fun setup() {
-        presenter = MainPresenter(MainModel(), view)
+        presenter = MainPresenter(CountModel(), view)
 
         verify { view.onIncrementButtonPressed(any()) }
         verify { view.onDecrementButtonPressed(any()) }

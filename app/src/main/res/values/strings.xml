@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">TP-04</string>
+    <string name="app_name">TP-05</string>
 
-    <string name="title">PIL Mobile - TP-04</string>
+    <string name="title">PIL Mobile - TP-05</string>
     <string name="increment_button">Increment</string>
     <string name="decrement_button">Decrement</string>
     <string name="reset_button">Reset</string>

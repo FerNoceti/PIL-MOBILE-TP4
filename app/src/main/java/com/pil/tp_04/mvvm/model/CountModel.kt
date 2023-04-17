@@ -1,9 +1,11 @@
-package com.pil.tp_04.mvp.model
+package com.pil.tp_04.mvvm.model
 
-import com.pil.tp_04.mvp.contract.MainContract
+import com.pil.tp_04.mvvm.contract.CountContract
 
-class MainModel : MainContract.Model {
+class CountModel : CountContract.Model {
+
     override var counter: Int = ZERO_INT
+        private set
 
     override fun increment(inputValue: Int) {
         counter += inputValue
