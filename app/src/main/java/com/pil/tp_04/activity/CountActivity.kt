@@ -21,20 +21,8 @@ class CountActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        countViewModel.editTextValue.observe(this) {
-            binding.inputCount.setText(it)
-        }
-
-        binding.inputCount.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                countViewModel.onEditTextValueChanged(s.toString())
-            }
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-        binding.increment.setOnClickListener { countViewModel.incrementValue() }
-        binding.decrement.setOnClickListener { countViewModel.decrementValue() }
+        binding.increment.setOnClickListener { countViewModel.incrementValue(binding.inputCount.text.toString()) }
+        binding.decrement.setOnClickListener { countViewModel.decrementValue(binding.inputCount.text.toString()) }
         binding.reset.setOnClickListener { countViewModel.resetValue() }
         countViewModel.initUI()
         countViewModel.data.observe({ lifecycle }, ::updateUI)

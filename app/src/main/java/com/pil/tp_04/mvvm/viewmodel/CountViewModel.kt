@@ -12,14 +12,6 @@ class CountViewModel(private val model: CountContract.Model) : ViewModel(), Coun
         return mutableLiveData
     }
 
-    private val _editTextValue = MutableLiveData<String>()
-    val editTextValue: LiveData<String>
-        get() = _editTextValue
-
-    fun onEditTextValueChanged(newValue: String) {
-        _editTextValue.value = newValue
-    }
-
     val data: LiveData<CounterData> = mutableLiveData
 
     fun initUI() {
@@ -31,13 +23,13 @@ class CountViewModel(private val model: CountContract.Model) : ViewModel(), Coun
         mutableLiveData.value = CounterData(CounterState.INITIAL)
     }
 
-    override fun incrementValue() {
-        model.increment(editTextValue.value?.toInt() ?: 0)
+    override fun incrementValue(input: String) {
+        model.increment(input.toInt() ?: 0)
         mutableLiveData.value = CounterData(CounterState.INCREMENT, model.counter)
     }
 
-    override fun decrementValue() {
-        model.decrement(editTextValue.value?.toInt() ?: 0)
+    override fun decrementValue(input: String) {
+        model.decrement(input.toInt() ?: 0)
         mutableLiveData.value = CounterData(CounterState.DECREMENT, model.counter)
     }
 
