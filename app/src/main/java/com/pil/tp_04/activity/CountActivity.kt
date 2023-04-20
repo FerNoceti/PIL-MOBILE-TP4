@@ -1,8 +1,6 @@
 package com.pil.tp_04.activity
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
 import com.pil.tp_04.databinding.ActivityMainBinding
 import com.pil.tp_04.mvvm.model.CountModel
@@ -21,11 +19,19 @@ class CountActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.increment.setOnClickListener { countViewModel.incrementValue(binding.inputCount.text.toString()) }
-        binding.decrement.setOnClickListener { countViewModel.decrementValue(binding.inputCount.text.toString()) }
+        binding.increment.setOnClickListener { countViewModel.incrementValue(getInputValue()) }
+        binding.decrement.setOnClickListener { countViewModel.decrementValue(getInputValue()) }
         binding.reset.setOnClickListener { countViewModel.resetValue() }
         countViewModel.initUI()
         countViewModel.data.observe({ lifecycle }, ::updateUI)
+    }
+
+    private fun getInputValue(): Int {
+        return if (binding.inputCount.text.toString().isNotEmpty()) {
+            binding.inputCount.text.toString().toInt()
+        } else {
+            0
+        }
     }
     private fun updateUI(it: CounterData) {
         when (it.state) {

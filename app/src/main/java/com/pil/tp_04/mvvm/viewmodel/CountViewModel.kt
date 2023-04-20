@@ -23,13 +23,13 @@ class CountViewModel(private val model: CountContract.Model) : ViewModel(), Coun
         mutableLiveData.value = CounterData(CounterState.INITIAL)
     }
 
-    override fun incrementValue(input: String) {
-        model.increment(input.toInt() ?: 0)
+    override fun incrementValue(inputValue: Int) {
+        model.increment(inputValue)
         mutableLiveData.value = CounterData(CounterState.INCREMENT, model.counter)
     }
 
-    override fun decrementValue(input: String) {
-        model.decrement(input.toInt() ?: 0)
+    override fun decrementValue(inputValue: Int) {
+        model.decrement(inputValue)
         mutableLiveData.value = CounterData(CounterState.DECREMENT, model.counter)
     }
 

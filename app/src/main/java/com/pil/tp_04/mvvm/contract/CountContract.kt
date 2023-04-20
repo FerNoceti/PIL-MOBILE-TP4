@@ -14,7 +14,7 @@ interface CountContract {
     interface ViewModel {
         fun getValue(): LiveData<CountViewModel.CounterData>
         fun resetValue()
-        fun incrementValue(inputValue: String)
-        fun decrementValue(inputValue: String)
+        fun incrementValue(inputValue: Int)
+        fun decrementValue(inputValue: Int)
     }
 }

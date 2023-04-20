@@ -1,75 +1,125 @@
 package com.pil.tp_04.mvvm.presenter
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.pil.tp_04.mvvm.contract.CountContract
 import com.pil.tp_04.mvvm.model.CountModel
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import com.pil.tp_04.mvvm.viewmodel.CountViewModel
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
 
 class MainPresenterTest {
 
-    private var view: CountContract.View = mockk(relaxed = true)
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
 
-    private lateinit var presenter: CountContract.Presenter
+    private lateinit var viewModel: CountContract.ViewModel
 
     @Before
-    fun setup() {
-        presenter = MainPresenter(CountModel(), view)
-
-        verify { view.onIncrementButtonPressed(any()) }
-        verify { view.onDecrementButtonPressed(any()) }
-        verify { view.onResetButtonPressed(any()) }
-        verify { view.showCounter(ZERO_STRING) }
+    fun setUp() {
+        viewModel = CountViewModel(CountModel())
     }
 
     @Test
-    fun `on increment button pressed with number test`() {
-        every { view.getInputValue() } returns FIVE_STRING
-
-        presenter.onIncrementButtonPressed()
-
-        verify { view.showCounter(FIVE_STRING) }
+    fun `initial state`() {
+        assert(viewModel.getValue().value == null)
     }
 
     @Test
-    fun `on increment button pressed without number test`() {
-        every { view.getInputValue() } returns EMPTY_STRING
+    fun `on press reset after initial state`() {
+        viewModel.resetValue()
 
-        presenter.onIncrementButtonPressed()
-
-        verify { view.showCounter(ZERO_STRING) }
+        assert(viewModel.getValue().value != null)
+        assert(viewModel.getValue().value?.state == CountViewModel.CounterState.INITIAL)
+        assert(viewModel.getValue().value?.value == ZERO)
     }
 
     @Test
-    fun `on decrement button pressed test`() {
-        every { view.getInputValue() } returns SEVEN_STRING
+    fun `on press reset after increment state`() {
+        viewModel.incrementValue(FIVE)
 
-        presenter.onDecrementButtonPressed()
-        
-        verify { view.showCounter(MINUS_SEVEN_STRING) }
+        viewModel.resetValue()
+
+        assert(viewModel.getValue().value != null)
+        assert(viewModel.getValue().value?.state == CountViewModel.CounterState.INITIAL)
+        assert(viewModel.getValue().value?.value == ZERO)
     }
 
     @Test
-    fun `on reset button pressed test`() {
-        every { view.getInputValue() } returns SEVEN_STRING
+    fun `on press reset after decrement state`() {
+        viewModel.decrementValue(FIVE)
 
-        presenter.onIncrementButtonPressed()
+        viewModel.resetValue()
 
-        verify { view.showCounter(SEVEN_STRING) }
+        assert(viewModel.getValue().value != null)
+        assert(viewModel.getValue().value?.state == CountViewModel.CounterState.INITIAL)
+        assert(viewModel.getValue().value?.value == ZERO)
+    }
 
-        presenter.onResetButtonPressed()
+    @Test
+    fun `on press increment after initial state`() {
+        viewModel.incrementValue(FIVE)
 
-        verify { view.showCounter(ZERO_STRING) }
-        verify { view.clear() }
+        assert(viewModel.getValue().value != null)
+        assert(viewModel.getValue().value?.state == CountViewModel.CounterState.INCREMENT)
+        assert(viewModel.getValue().value?.value == FIVE)
+    }
+
+    @Test
+    fun `on press increment after increment state`() {
+        viewModel.incrementValue(FIVE)
+        viewModel.incrementValue(FIVE)
+
+        assert(viewModel.getValue().value != null)
+        assert(viewModel.getValue().value?.state == CountViewModel.CounterState.INCREMENT)
+        assert(viewModel.getValue().value?.value == TEN)
+    }
+
+    @Test
+    fun `on press increment after decrement state`() {
+        viewModel.decrementValue(FIVE)
+        viewModel.incrementValue(FIVE)
+
+        assert(viewModel.getValue().value != null)
+        assert(viewModel.getValue().value?.state == CountViewModel.CounterState.INCREMENT)
+        assert(viewModel.getValue().value?.value == ZERO)
+    }
+
+    @Test
+    fun `on press decrement after initial state`() {
+        viewModel.decrementValue(FIVE)
+
+        assert(viewModel.getValue().value != null)
+        assert(viewModel.getValue().value?.state == CountViewModel.CounterState.DECREMENT)
+        assert(viewModel.getValue().value?.value == MINUS_FIVE)
+    }
+
+    @Test
+    fun `on press decrement after increment state`() {
+        viewModel.incrementValue(FIVE)
+        viewModel.decrementValue(FIVE)
+
+        assert(viewModel.getValue().value != null)
+        assert(viewModel.getValue().value?.state == CountViewModel.CounterState.DECREMENT)
+        assert(viewModel.getValue().value?.value == ZERO)
+    }
+
+    @Test
+    fun `on press decrement after decrement state`() {
+        viewModel.decrementValue(FIVE)
+        viewModel.decrementValue(FIVE)
+
+        assert(viewModel.getValue().value != null)
+        assert(viewModel.getValue().value?.state == CountViewModel.CounterState.DECREMENT)
+        assert(viewModel.getValue().value?.value == MINUS_TEN)
     }
 
     companion object {
-        private const val ZERO_STRING = "0"
-        private const val FIVE_STRING = "5"
-        private const val SEVEN_STRING = "7"
-        private const val MINUS_SEVEN_STRING = "-7"
-        private const val EMPTY_STRING = ""
+        private const val ZERO = 0
+        private const val FIVE = 5
+        private const val TEN = 10
+        private const val MINUS_FIVE = -5
+        private const val MINUS_TEN = -10
     }
 }
